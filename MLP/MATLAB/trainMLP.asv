@@ -38,9 +38,6 @@ end
 switch opts.configure
 
     case 'python'
-
-        % Edit model folder
-        opts.ModelFolder = [opts.ModelFolder '/Python'];
         
         % Call python script to train mlp
         pyfname = [opts.pythonfolder '/trainMLP.py' ];
@@ -73,10 +70,8 @@ switch opts.configure
 
         % Scale data
         [scaledSignals, minSignal, maxSignal] = minmaxscale(Signals);
-        signalscaling = [minSignal, maxSignal];
-
+        signalScales
         [scaledParams, minParams, maxParams] = minmaxscale(params);
-        paramscaling = [minParams, maxParams];
 
         % == Configure network
 
@@ -114,15 +109,8 @@ switch opts.configure
 
 
         % == Save MLP and scaling information
-
-        % Create output folder
-        outputfolder = [opts.ModelFolder '/' modeltype '/' schemename '/' opts.noisetype '/T2_' num2str(opts.T2train) '/sigma_' num2str(opts.sigma0train)];
-        mkdir(outputfolder);
-
-        save([outputfolder '/mlp.mat'], "mlp");
-        save([outputfolder '/signalscaling.mat'], "signalscaling");
-        save([outputfolder '/paramscaling.mat'], "paramscaling");
-             
+        save([opts.ModelFolder '/' modeltype '/' schemename '/' opts.noisetype '/T2_' num2str(opts.T2train) '/sigma_' num2str(opts.sigma0train) '/mlp.mat'], "mlp");
+        
 
 
 
@@ -153,8 +141,8 @@ end
 % Min Max scaler function
 function [scaledData, minVal, maxVal] = minmaxscale(data)
     % Get the minimum and maximum values
-    minVal = min(data(:));
-    maxVal = max(data(:));
+    minVal = min(data);
+    maxVal = max(data);
     
     % Scale the data to the range [0, 1]
     scaledData = (data - minVal) ./ (maxVal - minVal);

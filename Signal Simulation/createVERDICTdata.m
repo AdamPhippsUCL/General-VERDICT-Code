@@ -90,6 +90,36 @@ switch schemename
         scheme = BuildScheme(Vs);
 
 
+    case 'Original Full (Noise)'
+
+        % Define scan paramaters
+        V01 = [1,2,0, 54, 2000, 1];
+        V1 = [3.5, 26.9, 90, 54, 2000, 3];
+
+        V02 = [1,2,0, 68, 2000, 1];
+        V2 = [10.5, 33.9, 500, 68, 2000, 3];
+
+        V03 = [1,2,0, 94, 2000, 1];
+        V3 = [23.5, 46.9, 1500, 94, 2000, 3];
+
+        V04 = [1,2,0, 75, 4341, 1];
+        V4 = [14.0, 37.4, 2000, 75, 4341, 3];
+
+        V05 = [1,2,0, 87, 4108, 1];
+        V5 = [20, 43.4, 3000, 87, 4108, 3];
+        
+        % Addition of b=0 and descending order!
+        Vs = [...
+            V05; V5;...
+            V04; V4;...
+            V03; V3;...
+            V02; V2;...
+            V01; V1...
+            ];
+        
+        % build scheme
+        scheme = BuildScheme(Vs);
+
 
     case 'Original ex903000'
 
@@ -98,13 +128,13 @@ switch schemename
         % V1 = [3.5, 26.9, 90, 54, 2000, 3*6];
 
         V02 = [1,2,0, 68, 2000, 1];
-        V2 = [10.5, 33.9, 500, 68, 2000, 3*4];
+        V2 = [10.5, 33.9, 500, 68, 2000, 3]; %3*2];
 
         V03 = [1,2,0, 94, 2000, 1];
-        V3 = [23.5, 46.9, 1500, 94, 2482, 3*4];
+        V3 = [23.5, 46.9, 1500, 94, 2482, 3]; %3*3];
 
         V04 = [1,2,0, 75, 4341, 1];
-        V4 = [14.0, 37.4, 2000, 75, 4341, 3*4];
+        V4 = [14.0, 37.4, 2000, 75, 4341, 3]; %3*3];
 
         % V05 = [1,2,0, 87, 4108, 1];
         % V5 = [20, 43.4, 3000, 87, 4108, 3*6];
@@ -219,40 +249,40 @@ switch schemename
 
 
 
-    case 'Short Scheme NS'
-
-        V01 = [1, 2, 0, 76, 4000, 1];
-        V1  = [20, 41, 1800, 76, 4000, 3*3]; % Ndirections*avg high b
-        V02 = [1, 2, 0, 62, 4000, 1];
-        V2 = [12, 35, 1000, 62, 4000, 3*3];
-
-        Vs = [...
-            V01; V1;...
-            V02; V2;...
-            ];
-
-        % build scheme
-        scheme = BuildScheme(Vs);
-
-
-    case 'NS Simulation Scheme'
-
-        V00 = [1, 2, 0, 80, 4000, 1];
-        V0 = [20, 40, 2500, 80, 4000, 3*3];
-        V01 = [1, 2, 0, 76, 4000, 1];
-        V1  = [20, 41, 1800, 76, 4000, 3*3]; % Ndirections*avg high b
-        V02 = [1, 2, 0, 62, 4000, 1];
-        V2 = [12, 35, 1000, 62, 4000, 3*3];
-
-
-        Vs = [...
-            V00; V0;...
-            V01; V1;...
-            V02; V2;...
-            ];
-
-        % build scheme
-        scheme = BuildScheme(Vs);
+    % case 'Short Scheme NS'
+    % 
+    %     V01 = [1, 2, 0, 76, 4000, 1];
+    %     V1  = [20, 41, 1800, 76, 4000, 3*3]; % Ndirections*avg high b
+    %     V02 = [1, 2, 0, 62, 4000, 1];
+    %     V2 = [12, 35, 1000, 62, 4000, 3*3];
+    % 
+    %     Vs = [...
+    %         V01; V1;...
+    %         V02; V2;...
+    %         ];
+    % 
+    %     % build scheme
+    %     scheme = BuildScheme(Vs);
+    % 
+    % 
+    % case 'NS Simulation Scheme'
+    % 
+    %     V00 = [1, 2, 0, 80, 4000, 1];
+    %     V0 = [20, 40, 2500, 80, 4000, 3*3];
+    %     V01 = [1, 2, 0, 76, 4000, 1];
+    %     V1  = [20, 41, 1800, 76, 4000, 3*3]; % Ndirections*avg high b
+    %     V02 = [1, 2, 0, 62, 4000, 1];
+    %     V2 = [12, 35, 1000, 62, 4000, 3*3];
+    % 
+    % 
+    %     Vs = [...
+    %         V00; V0;...
+    %         V01; V1;...
+    %         V02; V2;...
+    %         ];
+    % 
+    %     % build scheme
+    %     scheme = BuildScheme(Vs);
 end
 
 
@@ -291,32 +321,32 @@ switch modeltype
         nparam = nR + ncompart;
 
 
-    case 'RDI'
-
-        % Define radii distributions
-        Rs = opts.Rs;
-        muRs = opts.muRs;
-        sigmaRs = opts.sigmaRs;
-        
-        % Number of distributions
-        ndist = length(muRs);
-
-        % Number of compartments
-        ncompart = 1;
-
-        % Number of parameters
-        nparam = ndist + ncompart;
+    % case 'RDI'
+    % 
+    %     % Define radii distributions
+    %     Rs = opts.Rs;
+    %     muRs = opts.muRs;
+    %     sigmaRs = opts.sigmaRs;
+    % 
+    %     % Number of distributions
+    %     ndist = length(muRs);
+    % 
+    %     % Number of compartments
+    %     ncompart = 1;
+    % 
+    %     % Number of parameters
+    %     nparam = ndist + ncompart;
 
     case 'RDI v1.3'
 
         ncompart = 1;
         nparam = 2 + ncompart;
-
-    case 'RDI v1.4'
-        
-        Rs = opts.Rs;
-        ncompart = 1;
-        nparam = 3 + ncompart;
+    % 
+    % case 'RDI v1.4'
+    % 
+    %     Rs = opts.Rs;
+    %     ncompart = 1;
+    %     nparam = 3 + ncompart;
         
 
 end
@@ -332,16 +362,18 @@ for paramIndx = 1:opts.Ntrain
 
     % == Intracellular
 
-%     % Randomise fIC
-%     fIC = opts.fICs(1) + (opts.fICs(2)-opts.fICs(1))*rand();
+    % Randomise fIC
+    fICs = linspace(0,1,100);
+    pdf = ones(size(fICs));
+    fIC = opts.fICs(1) + (opts.fICs(2)-opts.fICs(1))*rand();
 
     %% == INVESTIGATING FIC randomisation distribution!
-    fICs = linspace(0,1,100);
-    % pdf = ones(size(fICs));
+    
+
     % pdf = 2*abs(1-2*fICs);
-    pdf = (2/3)*(1 + 1*(cos(pi*fICs).^2));
-%     pdf = (2/3)*(1 + sin(pi*fICs).^2);
-    fIC = sampleDistribution(pdf, fICs);
+    % pdf = (2/3)*(1 + 1*(cos(pi*fICs).^2));
+    % pdf = (2/3)*(1 + sin(pi*fICs).^2);
+    % fIC = sampleDistribution(pdf, fICs);
 
     % number of IC compartments (induvidual radii or distributions)
     nIC = nparam - ncompart;

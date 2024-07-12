@@ -19,17 +19,17 @@ arguments
     % Range/Resolution of output pdf
     opts.zmin = 0
     opts.zmax = 2
-    opts.dz = 0.01
+    opts.dz = 0.005
 
     % Range/Resolution of integral
     opts.ymin = 0 
     opts.ymax = 2
-    opts.dy = 0.01 % Made larger for speed
+    opts.dy = 0.005 % Made larger for speed
 
 
     % Calibration
-    opts.calibrationfolder = "C:\Users\adam\OneDrive - University College London\UCL PhD\PhD Year 1\Projects\Short VERDICT Project\Code\Short-VERDICT-Project\Signal Simulation\Calibration Curves"
-    
+    opts.calibrationfolder = "C:\Users\adam\OneDrive - University College London\UCL PhD\PhD Year 1\Projects\General VERDICT Code\General-VERDICT-Code\Signal Simulation\Calibration Curves"
+
 end
 
 
@@ -42,7 +42,6 @@ ys = linspace(opts.ymin, opts.ymax, ceil( (opts.ymax-opts.ymin)/opts.dy) );
 % == Construct first Rice distribution
 
 b0SNR = A0/sigma0;
-b0sigma = sigma0;
 
 % Calibrate mean and sigma after extra averaging (low SNR)
 if and(b0SNR<=10, opts.N0>1)
@@ -53,6 +52,17 @@ if and(b0SNR<=10, opts.N0>1)
 
     load([char(opts.calibrationfolder) '/SNR ' num2str(b0SNRrounded) '/SigmaCalibration.mat'])
     b0sigma = sigma0*SigmaDict(opts.N0);
+else
+    b0sigma = sigma0*(1/sqrt(opts.N0));
+end
+
+
+% Check A0 and b0sigma >0
+if ~and(isscalar(A0), A0>0)
+    A0=0;
+end
+if ~and(isscalar(b0sigma), b0sigma>0)
+    b0sigma = 0;
 end
 
 RiceDist0 = makedist('Rician','s',A0,'sigma',b0sigma);
@@ -62,12 +72,7 @@ RiceDist0 = makedist('Rician','s',A0,'sigma',b0sigma);
 
 Nb = opts.N0*opts.Nav_ratio;
 
-if Nb>24
-    Nb=24;
-end
-
 % Calibrate 
-bsigma = (1/sqrt(opts.Nav_ratio))*sigma0;
 
 bSNR = Ab/sigma0;
 
@@ -80,6 +85,16 @@ if and(bSNR<=10, Nb>1)
 
     load([char(opts.calibrationfolder) '/SNR ' num2str(bSNRrounded) '/SigmaCalibration.mat'])
     bsigma = sigma0*SigmaDict(Nb);
+else
+    bsigma = (1/sqrt(opts.Nav_ratio))*sigma0;
+end
+
+% Check Ab and bsigma >0
+if ~and(isscalar(Ab), Ab>0)
+    Ab=0;
+end
+if ~and(isscalar(bsigma), bsigma>0)
+    bsigma = 0;
 end
 
 RiceDistb = makedist('Rician','s',Ab,'sigma',bsigma);

@@ -51,6 +51,9 @@ end
 % Scheme length
 nscan = length(scheme);
 
+% Normalise fRs
+tissue_params.fRs = (1/sum(tissue_params.fRs))*tissue_params.fRs;
+
 %% 1. Generate signal distributions for each scan
 
 % Initialise array for signals
@@ -104,7 +107,7 @@ for scanIndx = 1:nscan
         case 'No VASC VERDICT'
 
             % Tissue parameter vector
-            tps = [tissue_params.fRs, tissue_params.fEES];
+            tps = [tissue_params.fIC*tissue_params.fRs, tissue_params.fEES];
             
             % Diffusion weighting fraction
             fd = simulateSignal( ...
@@ -118,29 +121,29 @@ for scanIndx = 1:nscan
             bsignal = b0signal*fd;
 
 
-        case 'RDI'
-
-            % Tissue parameter vector
-            tps = [tissue_params.fRdists, tissue_params.fEES];
-            
-            % Diffusion weighting fraction
-            fd = simulateSignal( ...
-                tps, ...
-                scan_params, ...
-                modeltype,...
-                Rs = tissue_params.Rs,...
-                muRs = tissue_params.muRs,...
-                sigmaRs = tissue_params.sigmaRs...
-                );
-
-            % b\=0 signal
-            bsignal = b0signal*fd;
+        % case 'RDI'
+        % 
+        %     % Tissue parameter vector
+        %     tps = [tissue_params.fRdists, tissue_params.fEES];
+        % 
+        %     % Diffusion weighting fraction
+        %     fd = simulateSignal( ...
+        %         tps, ...
+        %         scan_params, ...
+        %         modeltype,...
+        %         Rs = tissue_params.Rs,...
+        %         muRs = tissue_params.muRs,...
+        %         sigmaRs = tissue_params.sigmaRs...
+        %         );
+        % 
+        %     % b\=0 signal
+        %     bsignal = b0signal*fd;
 
 
         case 'RDI v1.3'
 
             % Tissue parameter vector
-            tps = [tissue_params.fIC,tissue_params.muR, tissue_params.fEES];
+            tps = [tissue_params.fIC, tissue_params.muR, tissue_params.fEES];
             
             % Diffusion weighting fraction
             fd = simulateSignal( ...
