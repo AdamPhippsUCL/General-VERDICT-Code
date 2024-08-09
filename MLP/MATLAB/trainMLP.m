@@ -11,7 +11,7 @@ arguments
     % Options
 
     % Language to configure MLP network in
-    opts.configure = 'python'
+    opts.configure = 'MATLAB'
     
     % Noise
     opts.noisetype = 'Rice'
@@ -72,15 +72,17 @@ switch opts.configure
         load([opts.TrainDataFolder '/' modeltype '/' schemename '/' opts.noisetype '/T2_' num2str(opts.T2train) '/sigma_' num2str(opts.sigma0train) '/signals.mat']);
 
         % Scale data
-        [scaledSignals, minSignal, maxSignal] = minmaxscale(Signals);
-        signalscaling = [minSignal, maxSignal];
+        % [scaledSignals, minSignal, maxSignal] = minmaxscale(Signals);
+        % signalscaling = [minSignal, maxSignal];
+        scaledSignals=Signals;
+        signalscaling = [0, 1];
 
-        [scaledParams, minParams, maxParams] = minmaxscale(params);
-        paramscaling = [minParams, maxParams];
+        % [scaledParams, minParams, maxParams] = minmaxscale(params);
+        % paramscaling = [minParams, maxParams];
+        scaledParams=params;
+        paramscaling  = [0, 1];
 
         % == Configure network
-
-        net = dlnetwork;
 
         % Sizes of layers
         Ninput = size(Signals, 2);
@@ -96,22 +98,26 @@ switch opts.configure
             fullyConnectedLayer(Noutput)
             ] ;
 
-        net = addLayers(net,layers) ;
+        net = dlnetwork(layers) ;
 
         % == Training options
         options = trainingOptions( ...
             "adam", ...
-            MaxEpochs=1000, ...
+            MaxEpochs=150, ...
             Verbose=false, ...
             Plots="training-progress", ...
             Metrics="rmse",...
             LearnRateSchedule='none');
+
+
 
         lossFcn = "l2loss" ; % Loss between true and predicted LWF 
 
         % == Apply training
         [mlp, info] = trainnet(scaledSignals, scaledParams, net, lossFcn, options);
 
+        % Close figure
+        delete(findall(0));
 
         % == Save MLP and scaling information
 

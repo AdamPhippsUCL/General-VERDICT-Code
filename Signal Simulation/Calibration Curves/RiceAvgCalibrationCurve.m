@@ -8,21 +8,21 @@ folder = "C:\Users\adam\OneDrive - University College London\UCL PhD\PhD Year 1\
 % Number of samples
 Nsample = 100000;
 
-% NSA values
-NSAs = [1, 3, 6, 9,... % NSA=1 1, 1x3, 1x3x2, 1x3x3
-    4, 12, 24, 36,... % NSA=4 4, 4x3, 4x3x2, 4x3x3
-   18, 54]; % NSA=6 6, 6x3,6x3x2, 6x3x3
+% % NSA values
+% NSAs = [3, 6, 9,... % NSA= 1x3, 1x3x2, 1x3x3
+%     4, 12, 24, 36,... % NSA= 4, 4x3, 4x3x2, 4x3x3
+%    18, 54]; % NSA= 6, 6x3,6x3x2, 6x3x3
 
-NSAs = [1,2,3,4,5,6,7,8,9,10,12,15];
+
+NSAs = [3,4,6,9,12,18,24,36];
+
 
 % Define SNR
 SNRs = linspace(0.1,10,100);
 
-% save([char(folder) '/SNRs.mat'], 'SNRs')
+save([char(folder) '/SNRs.mat'], 'SNRs')
 
 
-SNRs = SNRs(50:end);
-SNRs = [2];
 
 for SNR = SNRs
 
@@ -98,6 +98,10 @@ for SNR = SNRs
         fitsigma = pd.sigma;
         FitSigmas(NSAIndx) = fitsigma;
 
+        if fitsigma/sigma > 1/sqrt(NSA)
+            fitsigma = sigma/sqrt(NSA);
+        end
+
 
         % % Display fitted distribution
         % fitricedist = makedist('Rician','s',fitv,'sigma',fitsigma);
@@ -109,37 +113,37 @@ for SNR = SNRs
      end
     
     % Make dictionarys
-    
+
     try
         mkdir([char(folder) '/SNR ' num2str(SNR)])
     catch
         disp('')
     end
 
-    % MeanDict = dictionary(NSAs, FitVs);
-    % save([char(folder) '/SNR ' num2str(SNR) '/MeanCalibration.mat'], 'MeanDict' )
-    % 
-    % SigmaDict = dictionary(NSAs, FitSigmas/sigma);
-    % save([char(folder) '/SNR ' num2str(SNR) '/SigmaCalibration.mat'], 'SigmaDict' )
+    MeanDict = dictionary(NSAs, FitVs);
+    save([char(folder) '/SNR ' num2str(SNR) '/MeanCalibration.mat'], 'MeanDict' )
+
+    SigmaDict = dictionary(NSAs, FitSigmas/sigma);
+    save([char(folder) '/SNR ' num2str(SNR) '/SigmaCalibration.mat'], 'SigmaDict' )
 
 
 end
 
 
-
-
-figure;
-plot(NSAs, FitVs, 'o-', DisplayName = '\alpha');
-hold on
-plot(NSAs, FitSigmas/sigma, '*-', DisplayName = '\beta')  
-grid on
-legend
-xlabel('Number of signal averages (NSA)')
-ax = gca();
-ax.FontSize = 12;
-
-% figure
-% plot(NSAs, FitSigmas/sigma, '*-', color = 'b')  
+% 
+% 
+% figure;
+% plot(NSAs, FitVs, 'o-', DisplayName = '\alpha');
+% hold on
+% plot(NSAs, FitSigmas/sigma, '*-', DisplayName = '\beta')  
+% grid on
+% legend
+% xlabel('Number of signal averages (NSA)')
+% ax = gca();
+% ax.FontSize = 12;
+% 
+% % figure
+% % plot(NSAs, FitSigmas/sigma, '*-', color = 'b')  
 
 
 

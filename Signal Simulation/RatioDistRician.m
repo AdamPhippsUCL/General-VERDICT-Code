@@ -44,7 +44,7 @@ ys = linspace(opts.ymin, opts.ymax, ceil( (opts.ymax-opts.ymin)/opts.dy) );
 b0SNR = A0/sigma0;
 
 % Calibrate mean and sigma after extra averaging (low SNR)
-if and(b0SNR<=10, opts.N0>1)
+if and(b0SNR<=5, opts.N0>1)
     SNRs = load([char(opts.calibrationfolder) '/SNRs.mat'] ).SNRs;
     b0SNRrounded = roundtowardvec(b0SNR, SNRs);
     load([char(opts.calibrationfolder) '/SNR ' num2str(b0SNRrounded) '/MeanCalibration.mat'])
@@ -77,7 +77,7 @@ Nb = opts.N0*opts.Nav_ratio;
 bSNR = Ab/sigma0;
 
 % Calibrate mean and sigma after extra averaging (low SNR)
-if and(bSNR<=10, Nb>1)
+if and(bSNR<=5, Nb>1)
     SNRs = load([char(opts.calibrationfolder) '/SNRs.mat'] ).SNRs;
     bSNRrounded = roundtowardvec(bSNR, SNRs);
     load([char(opts.calibrationfolder) '/SNR ' num2str(bSNRrounded) '/MeanCalibration.mat'])
